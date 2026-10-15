@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Prototip reclamă către TikTok</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#16213a;--mute:#5c6780;--line:#d9deea;--acc:#0b8f7f;--accink:#fff;--bad:#b42318;--warn:#b45309;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1523;--card:#18203a;--ink:#eef1f8;--mute:#9aa6c2;--line:#2a3558;--acc:#2fc4b0;--accink:#06201c;--bad:#ff8a80;--warn:#f0b35a}}
+*{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:560px;margin:0 auto;padding:16px 16px 48px}
+h1{font-size:1.4rem;margin:8px 0 4px}h2{font-size:1.05rem;margin:0 0 10px}
+p{margin:0 0 10px;color:var(--mute)}
+section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:14px 0}
+label{display:block;font-weight:600;margin:12px 0 4px}
+input[type=text],textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px}
+textarea{min-height:84px;resize:vertical}
+button{font:inherit;font-weight:600;border:0;border-radius:10px;padding:12px 14px;cursor:pointer;background:var(--acc);color:var(--accink)}
+button.sec{background:transparent;color:var(--ink);border:1px solid var(--line)}
+button.full{width:100%;margin-top:10px}
+.row{display:flex;gap:8px;align-items:flex-end}.row>*:first-child{flex:1}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+#pv{width:100%;max-width:260px;display:block;margin:10px auto;border-radius:12px;border:1px solid var(--line);background:var(--bg)}
+#pvv{width:100%;max-width:260px;display:none;margin:10px auto;border-radius:12px}
+#log{white-space:pre-wrap;font:14px/1.45 ui-monospace,Menlo,monospace;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;min-height:44px}
+.note{font-size:.92rem;color:var(--warn)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.on{opacity:1}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+</head>
+<body>
+<main>
+<h1>Reclamă către TikTok</h1>
+<p>Prototip de test. Nu se publică nimic: după partajare, tu continui în TikTok. Deschide pagina în Safari sau Chrome, nu în altă aplicație.</p>
+
+<section>
+<h2>1. Fotografia sau videoclipul tău</h2>
+<input id="file" type="file" accept="image/*,video/*" aria-label="Alege fotografie sau videoclip">
+<p class="note" id="vnote" hidden>Videoclipul se trimite needitat în acest prototip.</p>
+</section>
+
+<section>
+<h2>2. Despre ce faci reclamă</h2>
+<label for="prod">Produs sau serviciu</label><input id="prod" type="text" placeholder="ex. Tort de ciocolată">
+<label for="offer">Ce oferi, în cuvintele tale</label><textarea id="offer" placeholder="Scrie doar ce este adevărat despre ofertă"></textarea>
+<label for="loc">Localitate</label><input id="loc" type="text" placeholder="ex. Cluj-Napoca">
+<button class="full" id="prep" type="button">Pregătește reclama</button>
+<p class="note">Textul se compune din datele tale, fără AI. AI-ul vine într-o etapă următoare.</p>
+</section>
+
+<section id="out" hidden>
+<h2>3. Reclama pregătită</h2>
+<canvas id="pv" width="270" height="480" aria-label="Previzualizare"></canvas>
+<video id="pvv" controls playsinline muted></video>
+<label for="hook">Hook (apare pe imagine)</label><input id="hook" type="text">
+<label for="title">Titlu</label><div class="row"><input id="title" type="text"><button class="sec" data-c="title" type="button">Copiază titlul</button></div>
+<label for="desc">Descriere</label><textarea id="desc"></textarea>
+<label for="tags">Hashtaguri</label><input id="tags" type="text">
+<button class="sec full" data-c="full" type="button">Copiază descrierea + hashtagurile</button>
+</section>
+
+<section id="shsec" hidden>
+<h2>4. Partajează</h2>
+<button class="full" id="share" type="button">Partajează către TikTok</button>
+<p style="margin-top:10px">Se deschide lista telefonului, alegi TikTok. Descrierea cu hashtaguri se copiază automat. Dacă nu apare în TikTok, ține apăsat pe câmpul de descriere și alege „Lipește”.</p>
+<div id="log" aria-live="polite">Rezultatul apare aici.</div>
+</section>
+
+<section id="repsec" hidden>
+<h2>5. Ce a ajuns în TikTok?</h2>
+<label for="rM">Fișierul</label><select id="rM"><option>neverificat</option><option>a ajuns</option><option>nu a ajuns</option><option>TikTok nu apare în listă</option></select>
+<label for="rD">Descrierea</label><select id="rD"><option>neverificat</option><option>a apărut automat</option><option>nu a apărut (am lipit-o eu)</option></select>
+<label for="rH">Hashtagurile</label><select id="rH"><option>neverificat</option><option>au apărut automat</option><option>nu au apărut (le-am lipit eu)</option></select>
+<label for="rT">Titlul</label><select id="rT"><option>neverificat</option><option>TikTok nu are câmp de titlu</option><option>a apărut automat</option><option>are câmp, dar nu a apărut</option></select>
+<button class="full" id="rep" type="button">Copiază raportul</button>
+</section>
+</main>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+var $=function(i){return document.getElementById(i)};
+var src=null,isVideo=false,imgEl=null,outFile=null,lines=[];
+function toast(m){var t=$('toast');t.textContent=m;t.classList.add('on');setTimeout(function(){t.classList.remove('on')},1800)}
+function log(m){lines.push(m);$('log').textContent=lines.join('\n')}
+function slug(s){return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9]+/g,' ').trim().split(' ').map(function(w,i){return i?w.charAt(0).toUpperCase()+w.slice(1):w.toLowerCase()}).join('')}
+function fullText(){return ($('desc').value.trim()+'\n\n'+$('tags').value.trim()).trim()}
+function copyVal(v){
+  if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(v).then(function(){toast('Copiat')},function(){toast('Nu s-a putut copia')})}
+  else{var t=document.createElement('textarea');t.value=v;document.body.appendChild(t);t.select();try{document.execCommand('copy');toast('Copiat')}catch(e){toast('Nu s-a putut copia')}document.body.removeChild(t)}
+}
+$('file').addEventListener('change',function(e){
+  src=e.target.files[0]||null;if(!src)return;
+  isVideo=src.type.indexOf('video')===0;$('vnote').hidden=!isVideo;
+  if(!isVideo){imgEl=new Image();imgEl.onload=function(){if(!$('out').hidden)render()};imgEl.src=URL.createObjectURL(src)}
+});
+function wrap(x,t,w){var words=t.split(' '),ln='',o=[];words.forEach(function(wd){var tst=ln?ln+' '+wd:wd;if(x.measureText(tst).width>w&&ln){o.push(ln);ln=wd}else ln=tst});if(ln)o.push(ln);return o}
+function render(){
+  if(isVideo||!imgEl)return;
+  var c=document.createElement('canvas');c.width=1080;c.height=1920;var x=c.getContext('2d');
+  var s=Math.max(1080/imgEl.width,1920/imgEl.height),w=imgEl.width*s,h=imgEl.height*s;
+  x.fillStyle='#000';x.fillRect(0,0,1080,1920);x.drawImage(imgEl,(1080-w)/2,(1920-h)/2,w,h);
+  var hk=$('hook').value.trim();
+  if(hk){
+    x.font='bold 88px system-ui,sans-serif';x.textAlign='center';x.textBaseline='alphabetic';
+    var L=wrap(x,hk,920),bh=L.length*104+80,y0=1920-bh-160;
+    x.fillStyle='rgba(0,0,0,.6)';x.fillRect(60,y0,960,bh);
+    x.fillStyle='#fff';L.forEach(function(l,i){x.fillText(l,540,y0+40+(i+1)*100-12)});
+  }
+  var p=$('pv').getContext('2d');p.drawImage(c,0,0,270,480);
+  c.toBlob(function(b){outFile=new File([b],'reclama.jpg',{type:'image/jpeg'})},'image/jpeg',.9);
+}
+$('prep').addEventListener('click',function(){
+  if(!src){toast('Alege mai întâi un fișier');return}
+  var pr=$('prod').value.trim(),of=$('offer').value.trim(),lc=$('loc').value.trim();
+  if(!pr||!of){toast('Completează produsul și oferta');return}
+  $('hook').value=pr+(lc?' în '+lc:'');
+  $('title').value=pr+(lc?' – '+lc:'');
+  $('desc').value=of+(lc?'\n'+lc:'');
+  $('tags').value=['#'+slug(pr),lc?'#'+slug(lc):''].filter(function(t){return t.length>1}).join(' ');
+  ['out','shsec','repsec'].forEach(function(i){$(i).hidden=false});
+  if(isVideo){$('pv').style.display='none';var v=$('pvv');v.src=URL.createObjectURL(src);v.style.display='block';outFile=src}
+  else render();
+  $('out').scrollIntoView({behavior:'smooth'});
+});
+$('hook').addEventListener('input',render);
+document.querySelectorAll('[data-c]').forEach(function(b){b.addEventListener('click',function(){copyVal(b.dataset.c==='full'?fullText():$(b.dataset.c).value)})});
+
+$('share').addEventListener('click',function(){
+  lines=[];
+  var txt=fullText();
+  try{if(navigator.clipboard)navigator.clipboard.writeText(txt).catch(function(){})}catch(e){}
+  if(!outFile){log('Fișierul nu e gata. Apasă din nou „Pregătește reclama”.');return}
+  if(!navigator.share){log('Acest browser nu poate partaja. Descarcă materialul și folosește butoanele de copiere. Încearcă în Safari sau Chrome.');return}
+  var data={files:[outFile],text:txt,title:$('title').value};
+  var can=false;try{can=!navigator.canShare||navigator.canShare(data)}catch(e){}
+  if(!can){
+    data={files:[outFile]};
+    try{can=!navigator.canShare||navigator.canShare(data)}catch(e){can=false}
+    if(!can){log('Browserul spune că nu poate partaja acest fișier ('+outFile.type+'). Verifică dacă pagina e deschisă în Safari/Chrome.');return}
+    log('Fișier fără text: browserul nu acceptă fișier + text împreună. Textul e în clipboard.');
+  }
+  navigator.share(data).then(function(){log('Lista de partajare a funcționat. Notează mai jos ce a ajuns în TikTok.')},function(e){log(e&&e.name==='AbortError'?'Ai închis lista de partajare.':'Eroare: '+(e&&e.name)+' - '+(e&&e.message))});
+});
+
+$('rep').addEventListener('click',function(){
+  var r='RAPORT TEST TIKTOK\nBrowser: '+navigator.userAgent+'\nTip fișier: '+(outFile?outFile.type:'-')+
+  '\nPartajare disponibilă: '+(navigator.share?'da':'nu')+
+  '\nFișier: '+$('rM').value+'\nDescriere: '+$('rD').value+'\nHashtaguri: '+$('rH').value+'\nTitlu: '+$('rT').value+'\nLog: '+lines.join(' | ');
+  if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(r).then(function(){toast('Raport copiat')},function(){prompt('Copiază raportul:',r)});
+  else prompt('Copiază raportul:',r);
+});
+</script>
+</body>
+</html>
