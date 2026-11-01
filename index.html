@@ -357,29 +357,7 @@ html{scroll-behavior:auto}
 #acasa.ce-fullscene .ce-room-dim { animation-name: ce-scene-focus-softened !important; }
 @keyframes ce-scene-focus-softened { to { filter: grayscale(.18) brightness(.62) blur(0); transform: scale(1); } }
 </style>
-<style id="ce-neon-title-working">
-/* Visible traveling neon stripe; original heading typography/colors untouched. */
-#acasa.ce-fullscene h1{position:relative!important;isolation:isolate}
-#acasa.ce-fullscene h1>.ce-neon-text{
- position:absolute!important;inset:0!important;display:block!important;z-index:3!important;
- pointer-events:none!important;margin:0!important;padding:0!important;
- font:inherit!important;letter-spacing:inherit!important;line-height:inherit!important;
- color:transparent!important;-webkit-text-fill-color:transparent!important;
- background:linear-gradient(100deg, transparent 0%,transparent 37%,rgba(171,241,255,.25) 43%,#fff 47%,#b5f4ff 50%,#48d8ff 53%,transparent 60%,transparent 100%)!important;
- background-size:330% 100%!important;background-position:100% 0!important;
- -webkit-background-clip:text!important;background-clip:text!important;
- animation:ce-neon-travel-real 6s linear infinite!important;
- filter:drop-shadow(0 0 5px rgba(132,229,255,.8));
-}
-#acasa.ce-fullscene h1>.ce-neon-text .accent{color:inherit!important;-webkit-text-fill-color:transparent!important}
-@keyframes ce-neon-travel-real{
- 0%,12%{background-position:100% 0;opacity:0}
- 15%{opacity:1}
- 58%{background-position:0% 0;opacity:1}
- 63%,100%{background-position:0% 0;opacity:0}
-}
-@media(prefers-reduced-motion:reduce){#acasa.ce-fullscene h1>.ce-neon-text{animation:none!important;opacity:0!important}}
-</style><script id="ce-neon-title-init-fixed">document.addEventListener('DOMContentLoaded',function(){const title=document.querySelector('#acasa.ce-fullscene h1');if(!title)return;title.querySelectorAll('.ce-neon-text').forEach(el=>el.remove());const copy=document.createElement('span');copy.className='ce-neon-text';copy.setAttribute('aria-hidden','true');copy.innerHTML=title.innerHTML;title.appendChild(copy);});</script><style>
+<style>
 /* C1: removed announcement bar; responsive hero sized to its real content. */
 #acasa.ce-fullscene{min-height:clamp(650px,84svh,850px)!important;padding:56px 0 62px!important;box-sizing:border-box!important}
 @media(max-width:760px){
