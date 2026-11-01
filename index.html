@@ -770,4 +770,7 @@ window.addEventListener('scroll',tick,{passive:true});window.addEventListener('r
 })();
 </script><script id="ce-mobile-C5-behavior">
 (()=>{const button=document.getElementById('quoteToggle'),label=button?.querySelector('.ce-quote-label small');if(!button||!label)return;const original=label.textContent,media=matchMedia('(max-width:620px)');const update=()=>{label.textContent=media.matches?(button.getAttribute('aria-expanded')==='true'?'Apasă aici pentru a închide formularul':'Apasă aici pentru a deschide formularul'):original};new MutationObserver(update).observe(button,{attributes:true,attributeFilter:['aria-expanded']});media.addEventListener('change',update);update()})();
+</script><!-- C14: Mobile form toggle title follows its expanded state. -->
+<script id="ce-mobile-C14">
+(()=>{const button=document.getElementById('quoteToggle'),title=button?.querySelector('.ce-quote-label strong');if(!button||!title)return;const original=title.textContent,media=matchMedia('(max-width:620px)');const update=()=>{title.textContent=media.matches?(button.getAttribute('aria-expanded')==='true'?'Închide formularul':'Deschide formularul'):original};new MutationObserver(update).observe(button,{attributes:true,attributeFilter:['aria-expanded']});media.addEventListener('change',update);update()})();
 </script></body></html>
